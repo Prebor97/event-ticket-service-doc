@@ -41,11 +41,6 @@ components:
           type: object
           description: HATEOAS links
           properties:
-            self:
-              type: object
-              properties:
-                href:
-                  type: string
             tickets:
               type: object
               properties:
@@ -73,11 +68,6 @@ components:
           _links:
             type: object
             properties:
-              self:
-                type: object
-                properties:
-                  href:
-                    type: string
               event:
                 type: object
                 properties:
