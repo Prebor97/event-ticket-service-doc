@@ -155,8 +155,7 @@ components:
         transactionDetails:
           type: object
           description: Additional payment details from Payment Service
-
-    success:
+    Success:
       type: object
       properties:
         code:
