@@ -343,7 +343,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   /events/{eventId}/tickets:
     post:
-      summary: Book a ticket
+      summary: Book a ticket for an event
       description: Books a ticket for the event specified, saves it with pending status, sends details to Recon Service for payment processing. Returns ticket ID for frontend to redirect to payment page. Requires authenticated user. If successful, Payment Service will callback to confirm.
       security:
         - bearerAuth: []
