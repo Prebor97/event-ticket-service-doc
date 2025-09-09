@@ -164,9 +164,6 @@ components:
           type: integer
           default: 1
           description: Number of tickets to book
-        ticketType:
-          type: string
-          description: Optional ticket type (e.g., VIP, General)
     PaymentConfirmation:
       type: object
       required:
@@ -344,7 +341,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /events/{eventId}/tickets:
+  /events/{eventId}/{userId}/tickets:
     post:
       summary: Book a ticket
       description: Books a ticket for the event, saves it with pending status, sends details to Recon Service for payment processing. Returns ticket ID for frontend to redirect to payment page. Requires authenticated user. If successful, Payment Service will callback to confirm.
