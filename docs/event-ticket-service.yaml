@@ -105,56 +105,76 @@ components:
           type: string
         available_tickets:
           type: integer
-    Ticket:
+    TicketResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          ticketsBooked:
+            type: integer
+    UserListTicketResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - name
+          - ticketsBooked
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          ticketsBooked:
+            type: integer
+          _links:
+            type: object
+            properties:
+              self:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /tickets/{id}
+                    description: Link to this specific ticket 
+    UserTicketResponse:
       type: object
       properties:
         id:
           type: string
-          description: Unique ticket identifier
-        eventId:
-          type: string
-          description: Associated event ID
-        userId:
-          type: string
-          description: User who booked the ticket
-        status:
-          type: string
-          enum: [pending, successful, failed, cancelled]
-          description: Payment and booking status
-        bookingDate:
+        event:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            date:
+              type: string
+              format: date-time
+            location:
+              type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+        ticketsBooked:
+          type: integer
+        paymentDate:
           type: string
           format: date-time
-          description: Date the ticket was booked
-        paymentId:
-          type: string
-          description: Reference to payment in Payment/Recon Service
-        _links:
-          type: object
-          description: HATEOAS links
-          properties:
-            self:
-              type: object
-              properties:
-                href:
-                  type: string
-            event:
-              type: object
-              properties:
-                href:
-                  type: string
-                  description: Link to the associated event
-            confirmPayment:
-              type: object
-              properties:
-                href:
-                  type: string
-                  description: Link to confirm payment (internal/webhook use)
-            cancel:
-              type: object
-              properties:
-                href:
-                  type: string
-                  description: Link to cancel the ticket
     TicketInput:
       type: object
       required:
@@ -389,6 +409,17 @@ paths:
           required: true
           schema:
             type: string
+        - name: name
+          in: query
+          schema:
+            type: string
+          description: Filter events by name (partial match)
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [name, date, -name, -date]
+          description: Sort order (e.g., 'name' for ascending by name, '-date' for descending by date)    
       responses:
         '200':
           description: List of tickets
@@ -397,7 +428,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ticket'
+                  $ref: '#/components/schemas/TicketResponse'
         '401':
           description: Unauthorized (not admin)
           content:
@@ -444,7 +475,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ticket'
+                  $ref: '#/components/schemas/UserListTicketResponse'
         '401':
           description: Unauthorized
           content:
@@ -469,7 +500,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ticket'
+                $ref: '#/components/schemas/UserTicketResponse'
         '401':
           description: Unauthorized
           content:
@@ -504,50 +535,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '404':
           description: Ticket not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /webhooks/payment-confirmation:
-    post:
-      summary: Payment confirmation webhook
-      description: Endpoint for Payment Service to confirm payment status. Updates ticket and payment status in database and Recon Service. Internal use, secured by API key or mutual auth (not bearer).
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                ticketId:
-                  type: string
-                eventId:
-                  type: string
-                paymentId:
-                  type: string
-                status:
-                  type: string
-                  enum: [successful, failed]
-                details:
-                  type: object
-      responses:
-        '200':
-          description: Confirmation processed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-        '400':
-          description: Invalid payload
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Ticket or event not found
           content:
             application/json:
               schema:
