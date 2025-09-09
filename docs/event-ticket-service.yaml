@@ -51,13 +51,13 @@ components:
               properties:
                 href:
                   type: string
-                  description: Link to list tickets for this event (admin only)
+                  description: Link to list tickets for this event by name (admin only)
             bookTicket:
               type: object
               properties:
                 href:
                   type: string
-                  description: Link to book a ticket for this event
+                  description: Link to book a ticket for this event by id(user and event to send with ticket id to recon service)
     ViewEventsResponse:
       type: array
       items:
@@ -275,7 +275,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Event'
+                $ref: '#/components/schemas/ViewEventResponse'
         '404':
           description: Event not found
           content:
