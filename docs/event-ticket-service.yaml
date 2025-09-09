@@ -352,12 +352,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string    
+            type: string   
       requestBody:
         required: true
         content:
@@ -370,23 +365,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  ticketId:
-                    type: string
-                  eventId:
-                    type: string
-                  status:
-                    type: string
-                  _links:
-                    type: object
-                    properties:
-                      payment:
-                        type: object
-                        properties:
-                          href:
-                            type: string
-                            description: Suggested link to payment page (frontend handles redirect)
+                $ref: '#/components/schemas/Success'
         '401':
           description: Unauthorized
           content:
