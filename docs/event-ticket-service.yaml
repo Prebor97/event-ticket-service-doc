@@ -58,6 +58,32 @@ components:
                 href:
                   type: string
                   description: Link to book a ticket for this event
+    ViewEventsResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          _links:
+            type: object
+            properties:
+              self:
+                type: object
+                properties:
+                  href:
+                    type: string
+              event:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    description: Link to a particular event                     
     EventInput:
       type: object
       required:
@@ -196,7 +222,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Event'
+                  $ref: '#/components/schemas/ViewEventsResponse'
         '400':
           description: Invalid query parameters
           content:
@@ -279,7 +305,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Event'
+                $ref: '#/components/schemas/Success'
         '401':
           description: Unauthorized (not admin)
           content:
