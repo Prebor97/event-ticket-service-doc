@@ -160,6 +160,7 @@ components:
       properties:
         code:
           type: integer
+          example: 201
         message:
           type: string
           example: "Ticket created successfully"
