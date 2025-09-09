@@ -210,17 +210,25 @@ paths:
       summary: View all events
       description: Retrieves a list of all events, filterable by name and sortable by name or date. Available to everyone (no authentication required).
       parameters:
-        - name: name
-          in: query
-          schema:
-            type: string
-          description: Filter events by name (partial match)
-        - name: sort
-          in: query
-          schema:
-            type: string
-            enum: [name, date, -name, -date]
-          description: Sort order (e.g., 'name' for ascending by name, '-date' for descending by date)
+      - name: status
+        in: query
+        required: true
+        schema:
+          type: string
+          enum: [successful, pending]
+        description: Filter by payment status
+      - name: fromDate
+        in: query
+        schema:
+          type: string
+          format: date
+        description: Optional start date for event date filter (defaults to now)
+      - name: toDate
+        in: query
+        schema:
+          type: string
+          format: date
+        description: Optional end date for event date filter (defaults to far future)
       responses:
         '200':
           description: List of events
