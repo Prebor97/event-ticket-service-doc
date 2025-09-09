@@ -12,7 +12,7 @@ components:
       scheme: bearer
       bearerFormat: JWT  # Assumes JWT with claims for user ID and roles (e.g., 'admin')
   schemas:
-    Event:
+    ViewEventResponse:
       type: object
       properties:
         id:
@@ -62,20 +62,22 @@ components:
       type: object
       required:
         - name
-        - date
+        - descriptionn
+        - event_date
         - location
-        - capacity
+        - available_tickets
+        - price
       properties:
         name:
           type: string
-        date:
+        description:
+          type: string
+        event_date:
           type: string
           format: date-time
         location:
           type: string
-        description:
-          type: string
-        capacity:
+        available_tickets:
           type: integer
     Ticket:
       type: object
@@ -153,6 +155,16 @@ components:
         transactionDetails:
           type: object
           description: Additional payment details from Payment Service
+
+    success:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+          example: "Ticket created successfully"
+
     Error:
       type: object
       properties:
