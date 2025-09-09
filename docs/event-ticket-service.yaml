@@ -222,7 +222,7 @@ paths:
         schema:
           type: string
           format: date
-        description: Optional start date for event date filter (defaults to now)
+        description: Optional start date for the event date filter (defaults to now)
       - name: toDate
         in: query
         schema:
