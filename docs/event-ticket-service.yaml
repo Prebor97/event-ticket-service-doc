@@ -174,20 +174,6 @@ components:
           type: integer
           default: 1
           description: Number of tickets to book
-    PaymentConfirmation:
-      type: object
-      required:
-        - paymentId
-        - status
-      properties:
-        paymentId:
-          type: string
-        status:
-          type: string
-          enum: [successful, failed]
-        transactionDetails:
-          type: object
-          description: Additional payment details from Payment Service
     Success:
       type: object
       properties:
@@ -246,7 +232,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     post:
       summary: Create a new event
-      description: Creates a new event. Requires admin privileges. Triggers notification to Notification Service if applicable.
+      description: Only admins should be allowed to create events. Just input the necessary values in the request body(dto) to create a new event. No Notification is sent and a mail is sent to all admins that an event has been created.
       security:
         - bearerAuth: []
       requestBody:
@@ -277,7 +263,7 @@ paths:
   /events/{eventId}:
     get:
       summary: View specific event
-      description: Retrieves details of a specific event, including HATEOAS links to related resources (e.g., ticket booking or specifics). Available to everyone.
+      description: Retrieves details of a specific event, including HATEOAS links to related resources like ticket booking and get all tickets for an event which is only accessible to admins. Available to everyone.
       parameters:
         - name: eventId
           in: path
@@ -299,7 +285,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     put:
       summary: Update an event
-      description: Updates an existing event. Requires admin privileges (moved from authenticated user as it fits admin role better). Triggers updates to related services if needed.
+      description: Updates an existing event. Requires admin privileges.
       security:
         - bearerAuth: []
       parameters:
@@ -335,7 +321,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     delete:
       summary: Delete an event
-      description: Deletes an event. Requires admin privileges. May trigger cancellations and notifications via Notification Service.
+      description: Deletes an event. Requires admin privileges. Triggers notifications via Notification Service to send mails to all admins telling them of the deleted event.
       security:
         - bearerAuth: []
       parameters:
@@ -362,7 +348,7 @@ paths:
   /events/{eventId}/tickets:
     post:
       summary: Book a ticket for an event
-      description: Books a ticket for the event specified, saves it with pending status, sends details to Recon Service for payment processing. Returns ticket ID for frontend to redirect to payment page. Requires authenticated user. If successful, Payment Service will callback to confirm.
+      description: Books a ticket for the event specified by creating a ticket object and saving respective values in that ticket object. Get the user id, email and user name from the jwt. Set payment status to pending before saving the created entity. Then send event object and ticket object to the reconciliation service who will then save that information in the payment table and the status will be saved as pending. Also send event and tickets to notification service to alert user of ticket booked. You can include link to download pdf where booking information wil be present. 
       security:
         - bearerAuth: []
       parameters:
@@ -516,7 +502,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     delete:
       summary: Cancel a ticket
-      description: Cancels a pending or successful ticket. Requires authenticated user (owner). Triggers refund process via Payment Service if applicable.
+      description: Cancels a pending or successful ticket. Requires authenticated user (owner). Triggers refund process via Payment Service.
       security:
         - bearerAuth: []
       parameters:
