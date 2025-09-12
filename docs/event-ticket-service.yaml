@@ -201,8 +201,8 @@ paths:
         required: true
         schema:
           type: string
-          enum: [successful, pending]
-        description: Filter by payment status
+          enum: [active, non active]
+        description: Filter by status of event
       - name: fromDate
         in: query
         schema:
